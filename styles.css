@@ -4,3 +4,26 @@
     background-color: white;
     border: 3px solid gray;
 }
+
+.no-pressed {
+    display: block;
+    margin: 20px auto;
+    background-color: #C0C0C0;
+
+    border-left: 2px solid #DBDBDB;
+    border-top: 2px solid #DBDBDB;
+    border-right: 2px solid #606060;
+    border-bottom: 2px solid #606060;
+
+}
+
+.pressed {
+    display: block;
+    margin: 20px auto;
+    background-color: #C0C0C0;
+
+    border-right: 2px solid #DBDBDB;
+    border-bottom: 2px solid #DBDBDB;
+    border-left: 2px solid #606060;
+    border-top: 2px solid #606060;
+}

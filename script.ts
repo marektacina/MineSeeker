@@ -15,8 +15,25 @@ window.onload = () => {
         mouseCoordinates.y = e.clientY - canvas.offsetTop;
     };
     /***    Obsluha kliknuti mysi    ***/
-    canvas.onclick = function () {
+    canvas.onclick = () => {
         game.clickedCell(mouseCoordinates);
     };
+
+    canvas.oncontextmenu = (event) => {
+        event.preventDefault();
+        game.clickedCellRight(mouseCoordinates);
+    }
+
+    let flagBtn = document.getElementById("flag-button");
+
+    flagBtn.onclick = () => {
+        if (flagBtn.className == "no-pressed") {
+            flagBtn.className = "pressed";
+            game.flagSwitch = true;
+        } else {
+            flagBtn.className = "no-pressed";
+            game.flagSwitch = false;
+        }
+    }
 }
 
