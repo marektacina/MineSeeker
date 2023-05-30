@@ -35,5 +35,20 @@ window.onload = () => {
             game.flagSwitch = false;
         }
     }
+
+    let newGameBtn = document.getElementById('smiles');
+
+    newGameBtn.onmousedown = () => {
+        newGameBtn.className = "pressed";
+    }
+
+    newGameBtn.onmouseup = () => {
+        let flagBtn = document.getElementById("flag-button");
+        flagBtn.className = "no-pressed";
+        newGameBtn.className = "no-pressed";
+        newGameBtn.setAttribute('src', 'pics/smile.png');
+        game.flagSwitch = false;
+        game.newGame();
+    }
 }
 

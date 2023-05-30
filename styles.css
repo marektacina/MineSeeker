@@ -5,23 +5,41 @@
     border: 3px solid gray;
 }
 
-.no-pressed {
-    display: block;
-    margin: 20px auto;
+.display {
+    display: inline;
+    font-family: "Arial Narrow";
+    margin: 0 15px;
+    padding: 0px 5px;
+    width: 50px;
+    height: 23px;
+    text-align: center;
     background-color: #C0C0C0;
 
+    border-right: 2px solid #DBDBDB;
+    border-bottom: 2px solid #DBDBDB;
+    border-left: 2px solid #606060;
+    border-top: 2px solid #606060;
+}
+.panel {
+    display: block;
+    margin: 5px auto;
+    width: 352px;
+    text-align: center;
+    padding: 0;
+}
+
+.no-pressed {
+    margin: 0 15px;
+    background-color: #C0C0C0;
     border-left: 2px solid #DBDBDB;
     border-top: 2px solid #DBDBDB;
     border-right: 2px solid #606060;
     border-bottom: 2px solid #606060;
-
 }
 
 .pressed {
-    display: block;
-    margin: 20px auto;
+    margin: 0 15px;
     background-color: #C0C0C0;
-
     border-right: 2px solid #DBDBDB;
     border-bottom: 2px solid #DBDBDB;
     border-left: 2px solid #606060;

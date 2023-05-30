@@ -8,11 +8,13 @@ export class Board {
     private _canvas;
     private _boardCover = [];
     private _board = [];
+    private _placedMines;
+    private _minesLeft;
     constructor() {
         this._cells = 18;
+        this._placedMines = 40;
         this._canvas = document.getElementById("canvas");
         this._cell = this._canvas.width / (this._cells - 2);
-
         for (let i = 0; i < this._cells; i++) {
             let lineBoard = [];
             let lineBoardCover = [];
@@ -23,9 +25,21 @@ export class Board {
             this._board.push(lineBoard);
             this._boardCover.push(lineBoardCover);
         }
-        console.log(this._board);
+
     }
 
+    get minesLeft() {
+        return this._minesLeft;
+    }
+
+    resetBoard() {
+        for (let i = 0; i < this._cells; i++) {
+            for (let j = 0; j < this._cells; j++) {
+                this._board[i][j] = 0;
+                this._boardCover[i][j] = 1;
+            }
+        }
+    }
     /**
      * Nastavi kryti bunky
      * @param coordinates
@@ -40,10 +54,9 @@ export class Board {
     }
 
     placeMines() {
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < this._placedMines; i++) {
             let randomX = Math.ceil(Math.random() * (this._cells - 2));
             let randomY = Math.ceil(Math.random() * (this._cells - 2));
-            console.log(randomX + "  " + randomY);
 
             if (this._board[randomX][randomY] != 9) {
                 this._board[randomX][randomY] = 9;
@@ -67,8 +80,85 @@ export class Board {
                }
             }
         }
-
+        this._minesLeft = this._placedMines;
+        this.setMinesLeft(this._minesLeft);
     }
+
+    upMinesLeft() {
+        this.setMinesLeft(this._minesLeft + 1);
+    }
+
+    downMinesLeft() {
+        return this.setMinesLeft(this._minesLeft - 1);
+    }
+
+    setMinesLeft(minesLeft) {
+        this._minesLeft = minesLeft;
+        let minesAmount = document.getElementById('mines-amount');
+        minesLeft > 9 ? minesAmount.innerText = `0${minesLeft}` :  minesAmount.innerText = `00${minesLeft}`;
+
+        if (this._minesLeft == 0) {
+            let guessed = 0;
+            for (let i = 1; i < 17; i++) {
+                for (let j = 1; j < 17; j++) {
+                    if (this._board[i][j] == 9 && this._boardCover[i][j] == 2) {
+                        guessed += 1;
+                    }
+                }
+            }
+            if (guessed == this._placedMines) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    checkUncovered(posX, posY) {
+        if (this._board[posX][posY] == 0) {
+            for (let a = -1; a <= 1; a++) {
+                let posunX = posX + a;
+                for (let b = -1; b <= 1; b++) {
+                    let posunY = posY + b;
+                    if ((posunX > 0) && (posunY > 0) && (posunX < this._cells - 1) && (posunY < this._cells - 1)) {
+                        if (this._boardCover[posunX][posunY] == 1) {
+                            if (this._board[posunX][posunY] != 9) {
+                                this._boardCover[posunX][posunY] = 0;
+                            }
+
+                            this.drawCell(posunX, posunY);
+                            this.checkUncovered(posunX, posunY);
+                            // if (((a == 0) && (b == -1)) || ((a == 0) && (b == 1)) || ((a == -1) && (b == 0)) || ((a == 1) && (b == 0))) {
+                            //
+                            // }
+                        }
+                    }
+
+                }
+            }
+        } else if (this._board[posX][posY] == 9) {
+            this._board[posX][posY] = 11;
+            this.drawCell(posX, posY);
+            for (let i = 1; i < 17; i++) {
+                for (let j = 1; j < 17; j++) {
+                    if (this._board[i][j] == 9) {
+                        this._boardCover[i][j] = 0;
+                        this.drawCell(i, j);
+                    }
+                    // if (this._board[i][j] == 9 && this._boardCover[i][j] != 2) {
+                    //     this._boardCover[i][j] = 0;
+                    // } else if (this._board[i][j] != 9 && this._boardCover[i][j] == 2) {
+                    //     this._boardCover[i][j] = 1;
+                    // }
+                    // this.drawCell(i, j);
+                }
+            }
+            let newGameBtn = document.getElementById('smiles');
+            newGameBtn.setAttribute('src', 'pics/cry.png');
+            return false;
+        }
+        return true;
+    }
+
 
     drawBoard() {
         for (let i = 1; i < this._cells - 1; i++) {
@@ -89,8 +179,8 @@ export class Board {
         let posXDraw = posX - 1;
         let posYDraw = posY - 1;
         let kontext = this._canvas.getContext("2d")
-        this._boardCover[posX][posY] = 0;
-       // vykresleni plochy na zacatku hry nebo kliknuti pravym (vlajka)
+        //this._boardCover[posX][posY] = 0;
+        // vykresleni plochy na zacatku hry nebo kliknuti pravym (vlajka)
         if (this._boardCover[posX][posY] > 0) {
             kontext.fillStyle = "#C0C0C0";
             kontext.fillRect(posXDraw * this._cell + 1, posYDraw * this._cell + 1, this._cell - 2, this._cell - 2);
@@ -170,6 +260,8 @@ export class Board {
                     case 9:
                         image.src = 'pics/mine.png';
                         break;
+                    case 11:
+                        image.src = 'pics/mine_exploded.png';
 
                 }
             }
